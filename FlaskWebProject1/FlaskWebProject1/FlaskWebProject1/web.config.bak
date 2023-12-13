@@ -1,0 +1,13 @@
+<configuration>
+    <system.webServer>
+        <handlers accessPolicy="Read, Execute, Script">
+            <remove name="Python FastCGI" />
+            <add name="uphpcatalog" path="*" verb="*" modules="FastCgiModule" scriptProcessor="C:\Python\python.exe|C:\Python\Lib\site-packages\wfastcgi.py" resourceType="Unspecified" />
+            <add name="FlaskHandler" path="*" verb="*" modules="FastCgiModule" scriptProcessor="C:\Python\python.exe|C:\Users\BMaison\Desktop\UPHP_Catalog\catalog\catalog_files\catalog_inner_files\views.py" resourceType="Unspecified" requireAccess="Script" />
+            <add name="Python FastCGI" path="*" verb="*" modules="FastCgiModule" scriptProcessor="C:\Python\python.exe" resourceType="Directory" requireAccess="Execute" />
+        </handlers>
+    </system.webServer>
+    <system.web>
+        <identity impersonate="false" />
+    </system.web>
+</configuration>

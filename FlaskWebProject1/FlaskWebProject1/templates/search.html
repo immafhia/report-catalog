@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+{% block content %}
+
+<div class="container mt-5">
+    <h2 class="mb-4">{{ title }}</h2>
+    <form class="form-inline mb-4" method="get" action="/search">
+        <label class="sr-only" for="search_query">Search for a Report:</label>
+        <input type="text" class="form-control mr-2" id="search_query" name="query" required>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    <!-- Render search results for each category -->
+    <!-- Example for SSRS Automated Reports -->
+    {% if ssrs_automated_reports_results %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3 class="mb-0" style="font-size: 24px;">SSRS Automated Reports</h3>
+        </div>
+        <div class="card-body">
+            <ul class="list-unstyled">
+                {% for result in ssrs_automated_reports_results %}
+                <li class="mb-3">
+                    <strong>Report Type:</strong> {{ result.column1 }} <br>
+                    <strong>Template Link:</strong> {{ result.column2 }} <br>
+                    <strong>Description:</strong> {{ result.column3 }} <br>
+                    <!-- Add more fields as needed -->
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if uphp_dashboard_results %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3 class="mb-0" style="font-size: 24px;">UPHP Dashboards</h3>
+        </div>
+        <div class="card-body">
+            <ul class="list-unstyled">
+                {% for result in uphp_dashboard_results %}
+                <li class="mb-3">
+                    <strong>Report Type:</strong> {{ result.column1 }} <br>
+                    <strong>Template Link:</strong> {{ result.column2 }} <br>
+                    <strong>Description:</strong> {{ result.column3 }} <br>
+                    <!-- Add more fields as needed -->
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if ssrs_dashboard_results %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3 class="mb-0" style="font-size: 24px;">SSRS Dashboards</h3>
+        </div>
+        <div class="card-body">
+            <ul class="list-unstyled">
+                {% for result in ssrs_dashboard_results %}
+                <li class="mb-3">
+                    <strong>Report Type:</strong> {{ result.column1 }} <br>
+                    <strong>Template Link:</strong> {{ result.column2 }} <br>
+                    <strong>Description:</strong> {{ result.column3 }} <br>
+                    <!-- Add more fields as needed -->
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if ssrs_widoc_dashboard_results %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3 class="mb-0" style="font-size: 24px;" style="font-size: 24px;">SSRS WIDOC Dashboards</h3>
+        </div>
+        <div class="card-body">
+            <ul class="list-unstyled">
+                {% for result in ssrs_widoc_dashboard_results %}
+                <li class="mb-3">
+                    <strong>Report Type:</strong> {{ result.column1 }} <br>
+                    <strong>Template Link:</strong> {{ result.column2 }} <br>
+                    <strong>Description:</strong> {{ result.column3 }} <br>
+                    <!-- Add more fields as needed -->
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+</div>
+</div>
+{% endblock %}
