@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>204b481d-1e78-4f21-b644-ccb9f7306b75</ProjectGuid>
+    <ProjectHome>
+    </ProjectHome>
+    <ProjectTypeGuids>{789894c7-04a9-4a11-a6b5-3f4435165112};{1b580a1a-fdb3-4b32-83e1-6407eb2722e6};{349c5851-65df-11da-9384-00065b846f21};{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <StartupFile>runserver.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <LaunchProvider>Web launcher</LaunchProvider>
+    <WebBrowserUrl>http://localhost</WebBrowserUrl>
+    <OutputPath>.</OutputPath>
+    <SuppressCollectPythonCloudServiceFiles>true</SuppressCollectPythonCloudServiceFiles>
+    <Name>Report_Catalog</Name>
+    <RootNamespace>UPHP_Catalog</RootNamespace>
+    <SuppressEnvironmentCreationPrompt>True</SuppressEnvironmentCreationPrompt>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="main\views.py" />
+    <Compile Include="main\__init__.py" />
+    <Compile Include="runserver.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="main\" />
+    <Folder Include="main\templates\" />
+    <Folder Include="main\pseudocode_files\" />
+    <Folder Include="main\pseudocode_files\dashboard_pseudocode\" />
+    <Folder Include="main\pseudocode_files\ssrs_pseudocode\" />
+    <Folder Include="main\static\" />
+    <Folder Include="main\static\content\" />
+    <Folder Include="main\static\fonts\" />
+    <Folder Include="main\static\scripts\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="main\catalogquery.sql" />
+    <Content Include="main\pseudocode_files\dashboard_pseudocode\Advomas ESRD Member Details tab pseudocode.docx" />
+    <Content Include="main\pseudocode_files\dashboard_pseudocode\Agent Charge Backs Pseudocode.docx" />
+    <Content Include="main\pseudocode_files\dashboard_pseudocode\Agent Compensation Report Pseudocode.docx" />
+    <Content Include="main\pseudocode_files\dashboard_pseudocode\Contracted vs noncontracted dashboard pseudocode.docx" />
+    <Content Include="main\pseudocode_files\dashboard_pseudocode\Conversion to new GenerateExcel_FromTabbedTemplate.exe Utility.docx" />
+    <Content Include="main\pseudocode_files\dashboard_pseudocode\Creating a new dashboard report.docx" />
+    <Content Include="main\pseudocode_files\dashboard_pseudocode\cshcs_member_provider_report Pseudocode.docx" />
+    <Content Include="main\pseudocode_files\dashboard_pseudocode\Elective and Emergent Dashboard Pseudocode.docx" />
+    <Content Include="main\pseudocode_files\dashboard_pseudocode\H1977 Disenrollment Reports Pseudocode.docx" />
+    <Content Include="main\pseudocode_files\dashboard_pseudocode\MDHHS Program Integrity Overpayments Report Pseudo.docx" />
+    <Content Include="main\pseudocode_files\dashboard_pseudocode\MHL_Deeming_Dashboard_Report_Pseudocode.docx" />
+    <Content Include="main\pseudocode_files\dashboard_pseudocode\New_sarag_table3_MMP_Provider_Payment_Requests_and_Appeals_Pseudocode.docx" />
+    <Content Include="main\pseudocode_files\dashboard_pseudocode\odag_table_1_pseudocode.docx" />
+    <Content Include="main\pseudocode_files\dashboard_pseudocode\odag_table_2_pseudocode.docx" />
+    <Content Include="main\pseudocode_files\dashboard_pseudocode\odag_table_3_pseudocode.docx" />
+    <Content Include="main\pseudocode_files\dashboard_pseudocode\odag_table_3_pymt_c_pseudocode.docx" />
+    <Content Include="main\pseudocode_files\dashboard_pseudocode\Pending 687 Dashboard Pseudocode.docx" />
+    <Content Include="main\pseudocode_files\dashboard_pseudocode\Plexis Auths and Referrals Pseudocode.docx" />
+    <Content Include="main\pseudocode_files\dashboard_pseudocode\Revenue reconciliation on payment file not in pcm pseudocode.docx" />
+    <Content Include="main\pseudocode_files\dashboard_pseudocode\Tobacco_Usuage_Dashboard_Pseudocode.docx" />
+    <Content Include="main\pseudocode_files\dashboard_pseudocode\UPHP ICO Weekly COVID Data Spreadsheet Pseudocode.docx" />
+    <Content Include="main\static\content\bootstrap.css" />
+    <Content Include="main\static\content\bootstrap.min.css" />
+    <Content Include="main\static\content\site.css" />
+    <Content Include="main\static\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="main\static\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="main\static\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="main\static\fonts\glyphicons-halflings-regular.woff" />
+    <None Include="main\static\scripts\_references.js" />
+    <Content Include="main\static\scripts\bootstrap.js" />
+    <Content Include="main\static\scripts\bootstrap.min.js" />
+    <None Include="main\static\scripts\jquery.validate-vsdoc.js" />
+    <None Include="main\static\scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="main\static\scripts\jquery-1.10.2.js" />
+    <Content Include="main\static\scripts\jquery-1.10.2.min.js" />
+    <Content Include="main\static\scripts\jquery-1.10.2.min.map" />
+    <Content Include="main\static\scripts\jquery.validate.js" />
+    <Content Include="main\static\scripts\jquery.validate.min.js" />
+    <Content Include="main\static\scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="main\static\scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="main\static\scripts\modernizr-2.6.2.js" />
+    <Content Include="main\static\scripts\respond.js" />
+    <Content Include="main\static\scripts\respond.min.js" />
+    <Content Include="main\templates\index.html" />
+    <Content Include="main\templates\layout.html" />
+    <Content Include="main\templates\search.html" />
+    <Content Include="main\templates\ssrs_automated_reports.html" />
+    <Content Include="main\templates\ssrs_dashboard.html" />
+    <Content Include="main\templates\ssrs_widoc_dashboards.html" />
+    <Content Include="main\templates\uphp_dashboard_page.html" />
+    <Content Include="requirements.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />
+  <!-- Specify pre- and post-build commands in the BeforeBuild and 
+       AfterBuild targets below. -->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <AutoAssignPort>True</AutoAssignPort>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://localhost</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+        <WebProjectProperties>
+          <StartPageUrl>
+          </StartPageUrl>
+          <StartAction>CurrentPage</StartAction>
+          <AspNetDebugging>True</AspNetDebugging>
+          <SilverlightDebugging>False</SilverlightDebugging>
+          <NativeDebugging>False</NativeDebugging>
+          <SQLDebugging>False</SQLDebugging>
+          <ExternalProgram>
+          </ExternalProgram>
+          <StartExternalURL>
+          </StartExternalURL>
+          <StartCmdLineArguments>
+          </StartCmdLineArguments>
+          <StartWorkingDirectory>
+          </StartWorkingDirectory>
+          <EnableENC>False</EnableENC>
+          <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

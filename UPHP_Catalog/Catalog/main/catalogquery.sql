@@ -97,8 +97,8 @@ SELECT
 	c.Name,
 	convert(varchar,dateadd(ms,AVG(DATEDIFF(MILLISECOND, l.TimeStart, l.TimeEnd)),0), 114) avg_time
 INTO #report_run_time
-FROM [SSRSReportServer].[dbo].[ExecutionLog] AS l
-INNER JOIN [SSRSReportServer].[dbo].[Catalog] AS c ON l.ReportID = C.ItemID
+FROM [UPHP_Prod_Replica].[dbo].[ExecutionLog] AS l
+INNER JOIN [UPHP_Prod_Replica].[dbo].[Catalog] AS c ON l.ReportID = C.ItemID
 WHERE c.Type = 2 
 GROUP BY c.Name
 
@@ -123,7 +123,7 @@ SELECT
 	rt.avg_time [Average Time (h:m:s:ms)],
 	'https://ssrs.uphp.local/reports/report' + c.Path,
 	NULL
-FROM [SSRSReportServer].[dbo].[Catalog] c
+FROM [UPHP_Prod_Replica].[dbo].[Catalog] c
 
 LEFT JOIN #report_run_time rt
 	ON rt.Name = c.Name 

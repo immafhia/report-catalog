@@ -1,12 +1,15 @@
 """
 Routes and views for the flask application.
 """
+from multiprocessing import connection
 import os
 import logging
-from FlaskWebProject1 import app
+from plistlib import UID
+from main import app
 from datetime import datetime
 from flask import render_template, request
 import pyodbc
+
 
 # Define the log folder path
 log_folder_path = "logs"
@@ -19,15 +22,18 @@ if not os.path.exists(log_folder_path):
 error_log_file_path = os.path.join(log_folder_path, "error.log")
 
 # Configure logging
-logging.basicConfig(filename=error_log_file_path, level=logging.ERROR)
+logging.basicConfig(
+    filename=error_log_file_path,
+    level=logging.DEBUG,  # Set the desired logging level
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
 
 
 def log_error_and_render_generic_error(e):
     # Log the exception
-    logging.error(f"An error occurred: {e}")
+    logging.error("An error occurred: %s", str(e), exc_info=True)
 
-    # Display a generic error message to the user
-    return render_template('error.html', error_message=f"An unexpected error occurred. Please try again later.")
 
 
 @app.route('/')
@@ -75,9 +81,7 @@ def ssrs_dashboards(page, items_per_page):
 
         # Calculate the offset to fetch the correct items based on the page number
         offset = (page - 1) * items_per_page
-
-        # Establish a connection to the SQL Server database using Windows Authentication
-        conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=SSRSReportServer;UID=appadm;PWD=DacH7$w4;Integrated Security=False;')
+        conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=UPHP_Prod_Replica;Trusted_Connection=Yes;')
         cursor = conn.cursor()
 
         # Write your SQL query directly in the Python script
@@ -158,7 +162,7 @@ def ssrs_widoc_dashboards(page, items_per_page):
     offset = (page - 1) * items_per_page
 
     # Establish a connection to the SQL Server database using Windows Authentication
-    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=SSRSReportServer;UID=appadm;PWD=DacH7$w4;Integrated Security=False;')
+    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=UPHP_Prod_Replica;Trusted_Connection=Yes;')
     cursor = conn.cursor()
 
     # Write your SQL query directly in the Python script
@@ -233,7 +237,7 @@ def ssrs_report_data(page, items_per_page):
     offset = (page - 1) * items_per_page
 
     # Establish a connection to the SQL Server database using Windows Authentication
-    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=SSRSReportServer;UID=appadm;PWD=DacH7$w4;Integrated Security=False;')
+    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=UPHP_Prod_Replica;Trusted_Connection=Yes;')
     cursor = conn.cursor()
 
     # Write your SQL query directly in the Python script
@@ -285,7 +289,7 @@ def ssrs_report_data(page, items_per_page):
 
 def perform_search_uphp_dashboards(query):
     # Establish a connection to the SQL Server database using Windows Authentication
-    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=SSRSReportServer;UID=appadm;PWD=DacH7$w4;Integrated Security=False;')
+    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=UPHP_Prod_Replica;Trusted_Connection=Yes;')
     cursor = conn.cursor()
 
     # Write your SQL query with the search term between '%' signs for wildcard matching
@@ -338,7 +342,7 @@ def perform_search_uphp_dashboards(query):
 
 def perform_search_ssrs_dashboards(query):
     # Establish a connection to the SQL Server database using Windows Authentication
-    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=SSRSReportServer;UID=appadm;PWD=DacH7$w4;Integrated Security=False;')
+    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=UPHP_Prod_Replica;Trusted_Connection=Yes;')
     cursor = conn.cursor()
 
     # Write your SQL query with the search term between '%' signs for wildcard matching
@@ -390,7 +394,7 @@ def perform_search_ssrs_dashboards(query):
 
 def perform_search_ssrs_automated_reports(query):
     # Establish a connection to the SQL Server database using Windows Authentication
-    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=SSRSReportServer;UID=appadm;PWD=DacH7$w4;Integrated Security=False;')
+    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=UPHP_Prod_Replica;Trusted_Connection=Yes;')
     cursor = conn.cursor()
 
     # Write your SQL query with the search term between '%' signs for wildcard matching
@@ -442,7 +446,7 @@ def perform_search_ssrs_automated_reports(query):
 
 def perform_search_ssrs_widoc_dashboards(query):
     # Establish a connection to the SQL Server database using Windows Authentication
-    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=SSRSReportServer;UID=appadm;PWD=DacH7$w4;Integrated Security=False;')
+    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=UPHP_Prod_Replica;Trusted_Connection=Yes;')
     cursor = conn.cursor()
 
     # Write your SQL query with the search term between '%' signs for wildcard matching
@@ -553,7 +557,7 @@ def fetch_data_from_database(page, items_per_page):
     offset = (page - 1) * items_per_page
 
     # Establish a connection to the SQL Server database using Windows Authentication
-    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=SSRSReportServer;UID=appadm;PWD=DacH7$w4;Integrated Security=False;')
+    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=UPHP_Prod_Replica;Trusted_Connection=Yes;')
     cursor = conn.cursor()
 
     # Write your SQL query directly in the Python script
