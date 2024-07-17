@@ -1,13 +1,57 @@
 {% extends "layout.html" %}
 
 {% block content %}
+<style>
+    .button-wrapper {
+        max-width: 900px; /* Adjust this value as needed */
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-around;
+        padding: 20px;
+    }
+
+        .button-wrapper .col-md-3 {
+            flex: 1; /* Allow columns to grow and take available space */
+            padding: 0 10px; /* Adjust padding between columns */
+        }
+
+        .button-wrapper .btn {
+            width: 100%; /* Make buttons take full width of their container */
+            white-space: normal; /* Allow button text to wrap if necessary */
+        }
+
+    .textbox-wrapper {
+        max-width: 900px; /* Adjust this value as needed */
+        margin: 20px auto; /* Add some margin for spacing */
+        text-align: center;
+    }
+
+        .textbox-wrapper input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+        }
+</style>
 
 <div class="jumbotron">
-    <h1 style="text-align: center;">UPHP Catalog</h1>
-    <p class="lead">Welcome to the UPHP Catalog. This is a collection of reports among all of our platforms. Free to search and find what report/s you wish to learn about. Explore our comprehensive collection of reports across various platforms. Each button below represents a unique category of reports. Click the buttons below to take you to which type of report you are looking for.</p>
+    <h1 style="text-align: center;">UPHP Report Catalog</h1>
+    <p class="lead">Welcome to the UPHP Report Catalog! This catalog is dedicated to collecting, organizing, and storing information from various reports and their corresponding platforms, making it easily accessible for users. Each report in the catalog includes essential data points, such as:</p>
+    <ul class="lead">
+        <li>Associated group contracts</li>
+        <li>Creation and last modification dates</li>
+        <li>Report description</li>
+        <li>Average execution time</li>
+        <li>Data Constraints</li>
+    </ul>
+    <p class="lead">Use the buttons below to explore different report categories. To find a specific report, enter its name in the search box and press "Enter" to view results across all categories.</p>
 </div>
 
-<div class="row">
+
+<div class="textbox-wrapper">
+    <input type="text" id="search-input" placeholder="Enter Search Criteria...">
+</div>
+
+<div class="button-wrapper">
     <div class="col-md-3">
         <a class="btn btn-primary btn-lg btn-block mb-3" href="/ssrs_widoc_page">SSRS WIDOC Dashboards</a>
     </div>
@@ -15,11 +59,27 @@
         <a class="btn btn-primary btn-lg btn-block mb-3" href="/uphp_dashboard_page">UPHP Dashboards</a>
     </div>
     <div class="col-md-3">
-        <a class="btn btn-primary btn-lg btn-block mb-3" href="/ssrs_dashboard_page">SSRS Dashboards</a>
-    </div>
-    <div class="col-md-3">
         <a class="btn btn-primary btn-lg btn-block mb-3" href="/ssrs_automated_reports">SSRS Automated Reports</a>
     </div>
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Get the search input element
+    var searchInput = document.getElementById('search-input');
+
+    // Add event listener for Enter key press
+    searchInput.addEventListener('keydown', function (event) {
+        if (event.keyCode === 13) { // Check if Enter key is pressed
+            var searchText = searchInput.value.trim(); // Get the text entered in the textbox
+
+            // Redirect to search page with the entered query
+            if (searchText !== '') {
+                window.location.href = '/search?query=' + encodeURIComponent(searchText);
+            }
+        }
+    });
+</script>
 {% endblock %}

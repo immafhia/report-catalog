@@ -1,3 +1,7 @@
+/*This is the query that will update the catalog data table with updated data*/
+
+TRUNCATE TABLE [ReportCatalog].[dbo].[catalog_data]
+
 IF OBJECT_ID('tempdb..#results', 'U') IS NOT NULL
 	DROP TABLE #results
 CREATE TABLE #results ( 
@@ -11,9 +15,7 @@ CREATE TABLE #results (
 	[Template Link] VARCHAR(MAX),
 	[Group Contracts] VARCHAR(MAX),
 	[Data Constraints] VARCHAR(MAX),
-	[Input Fields] VARCHAR(MAX),
-	[Original Requester] VARCHAR(MAX),
-	[Download Template] VARCHAR(MAX)
+	[Input Fields] VARCHAR(MAX)
 )
 
 IF OBJECT_ID('tempdb..#avg_time', 'U') IS NOT NULL
@@ -57,9 +59,7 @@ INSERT INTO #results
     [Average Execution Time (h:m:s:ms)],
 	[Link],
 	[Template Link],
-	[Group Contracts],
-	[Original Requester],
-	[Download Template]
+	[Group Contracts]
 )
 SELECT 
 	'UPHP Dashboard' AS FolderPath,
@@ -70,9 +70,7 @@ SELECT
 	avg_tm.average [Average (h:m:s:ms)],
 	'https://dashboard.uphp.local/dashboard/' + r.location,
 	'https://dashboard.uphp.local/dashboard/' + REPLACE(REPLACE(location, '.aspx', '.xlsx'), '/', '/templates/'),
-	NULL,
-	#report_original_requester.original_requester,
-	'Download Template'
+	NULL
 
 FROM REPORT.Dashboard.dbo.reports r
 
@@ -95,10 +93,10 @@ IF OBJECT_ID('tempdb..#report_run_time', 'U') IS NOT NULL
 	DROP TABLE #report_run_time
 SELECT 
 	c.Name,
-	convert(varchar,dateadd(ms,AVG(DATEDIFF(MILLISECOND, l.TimeStart, l.TimeEnd)),0), 114) avg_time
+	CONVERT(VARCHAR,DATEADD(ms,AVG(DATEDIFF(MILLISECOND, l.TimeStart, l.TimeEnd)),0), 114) avg_time
 INTO #report_run_time
-FROM [UPHP_Prod_Replica].[dbo].[ExecutionLog] AS l
-INNER JOIN [UPHP_Prod_Replica].[dbo].[Catalog] AS c ON l.ReportID = C.ItemID
+FROM [SSRSReportServer].[dbo].[ExecutionLog] AS l
+INNER JOIN [SSRSReportServer].[dbo].[Catalog] AS c ON l.ReportID = C.ItemID
 WHERE c.Type = 2 
 GROUP BY c.Name
 
@@ -119,11 +117,11 @@ SELECT
 	REPLACE(c.Name, '_', ' ') Name,
 	c.Description,
 	c.CreationDate,
-	c.ModifiedDate, -- Is this needed since everytime all the reports get redeployed this value gets reset regardless of it the report had any actual changes.
+	c.ModifiedDate, -- This is needed since everytime all the reports get redeployed this value gets reset regardless of it the report had any actual changes.
 	rt.avg_time [Average Time (h:m:s:ms)],
 	'https://ssrs.uphp.local/reports/report' + c.Path,
 	NULL
-FROM [UPHP_Prod_Replica].[dbo].[Catalog] c
+FROM [SSRSReportServer].[dbo].[Catalog] c
 
 LEFT JOIN #report_run_time rt
 	ON rt.Name = c.Name 
@@ -132,6 +130,8 @@ WHERE c.Type = 2 -- Report
 
 ORDER BY FolderPath, c.Name
 
+if object_id('tempdb..#main', 'U') is not null
+    drop table #main;
 SELECT 
 	CASE 
 		WHEN r.[Report Type] = 'Automated_Reports' THEN 'SSRS Automated Reports'
@@ -151,10 +151,28 @@ SELECT
 	r.Link,
 	r.[Template Link],
 	r.[Group Contracts],
-	r.[Original Requester],
 	r.[Input Fields],
-	r.[Data Constraints],
-	r.[Download Template]
+	r.[Data Constraints]
+INTO #main
 FROM #results r
 WHERE r.Name <> ''
 ORDER BY r.[Report Type], r.Name
+
+INSERT INTO ReportCatalog.dbo.catalog_data
+
+SELECT
+[Report Type],
+Name,
+Description,
+[Creation Date],
+[Modified Date],
+[Average Execution Time (h:m:s:ms)],
+Link,
+[Template Link],
+[Group Contracts],
+[Input Fields],
+[Data Constraints]
+FROM #main
+
+WHERE [Report Type] <> 'SSRS Dashboard'
+ORDER BY [Report Type]

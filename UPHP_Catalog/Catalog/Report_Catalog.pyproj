@@ -93,7 +93,6 @@
     <Content Include="main\templates\layout.html" />
     <Content Include="main\templates\search.html" />
     <Content Include="main\templates\ssrs_automated_reports.html" />
-    <Content Include="main\templates\ssrs_dashboard.html" />
     <Content Include="main\templates\ssrs_widoc_dashboards.html" />
     <Content Include="main\templates\uphp_dashboard_page.html" />
     <Content Include="requirements.txt" />

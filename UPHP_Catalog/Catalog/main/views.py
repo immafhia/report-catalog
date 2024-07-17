@@ -7,10 +7,11 @@ import logging
 from plistlib import UID
 from main import app
 from datetime import datetime
-from flask import render_template, request
+from flask import render_template, request, redirect, url_for
 import pyodbc
 
-
+#COMMENT THIS PORTION OF CODE OUT FOR LOCAL TESTING#
+################################################################
 # Define the log folder path
 log_folder_path = "logs"
 
@@ -33,7 +34,7 @@ logging.basicConfig(
 def log_error_and_render_generic_error(e):
     # Log the exception
     logging.error("An error occurred: %s", str(e), exc_info=True)
-
+###################################################################
 
 
 @app.route('/')
@@ -46,95 +47,10 @@ def home():
         year=datetime.now().year,
     )
 
-
-@app.route('/ssrs_dashboard_page')
-def ssrs_dashboard_page():
-
-    page = request.args.get('page', default=1, type=int)
-    items_per_page = 100  # Set the number of items to display per page
-
-    try:
-        # Fetch data from the database based on the current page and items per page
-        data = ssrs_dashboards(page, items_per_page)
-
-        # Calculate the next page number
-        next_page_number = page + 1 if len(data) >= items_per_page else None
-
-        # If there are no more records in the database, set next_page_number to None
-        if len(data) < items_per_page:
-            next_page_number = None
-        previous_page_number = page - 1 if page > 1 else None
-
-        # Pass data, page number, items_per_page, and next_page_number to the template
-        return render_template('ssrs_dashboard.html', data=data, title='SSRS Dashboards', page=page,
-                               items_per_page=items_per_page, next_page_number=next_page_number,
-                               previous_page_number=previous_page_number)
-
-    except Exception as e:
-        return log_error_and_render_generic_error(e)
-
-def ssrs_dashboards(page, items_per_page):
-
-    try:
-        # Convert `page` to an integer
-        page = int(page)
-
-        # Calculate the offset to fetch the correct items based on the page number
-        offset = (page - 1) * items_per_page
-        conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=UPHP_Prod_Replica;Trusted_Connection=Yes;')
-        cursor = conn.cursor()
-
-        # Write your SQL query directly in the Python script
-        sql_query = f'''
-            SELECT 
-            [Name] AS ReportType,
-            [Template Link] AS TemplateLink,
-            Description AS description,
-            [Average Execution Time (h:m:s:ms)] AS averagetime,
-            CONVERT(DATE, [Creation Date]) AS Creation_Date,
-            [Modified Date] AS modifieddate,
-            [Original Requester] As originalrequester,
-            [Group Contracts] as gc,
-            [Input Fields] as inputfields,
-            [Data Constraints] as dataconstraints
-            FROM 
-            dbo.testpython
-            WHERE [Report Type] = 'SSRS Dashboard'
-            ORDER BY [Name]
-            OFFSET {offset} ROWS
-            FETCH NEXT {items_per_page} ROWS ONLY
-        '''
-
-        # Execute your SQL query
-        cursor.execute(sql_query)
-
-        # Fetch all rows as a list of dictionaries
-        data = []
-        for row in cursor.fetchall():
-            entry = {
-                'column1': row.ReportType,
-                'column2': row.TemplateLink,
-                'column3': row.description,
-                'column4': row.averagetime,
-                'column5': row.Creation_Date,
-                'column6': row.modifieddate,
-                'column7': row.originalrequester,
-                'column8': row.gc,
-                'column9': row.inputfields,
-                'column10': row.dataconstraints
-                # Add more columns as needed
-            }
-            data.append(entry)
-
-        # Close the connection
-        conn.close()
-
-        return data
-
-    except Exception as e:
-        return log_error_and_render_generic_error(e)
-
-
+@app.route('/desired_page')
+def desired_page():
+    # Always redirect to the search.html page
+    return redirect(url_for('search'))
 
 @app.route('/ssrs_widoc_page')
 def ssrs_widoc_page():
@@ -162,7 +78,7 @@ def ssrs_widoc_dashboards(page, items_per_page):
     offset = (page - 1) * items_per_page
 
     # Establish a connection to the SQL Server database using Windows Authentication
-    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=UPHP_Prod_Replica;Trusted_Connection=Yes;')
+    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=ReportCatalog;Trusted_Connection=Yes;')
     cursor = conn.cursor()
 
     # Write your SQL query directly in the Python script
@@ -174,12 +90,11 @@ def ssrs_widoc_dashboards(page, items_per_page):
     [Average Execution Time (h:m:s:ms)] AS averagetime,
     CONVERT(DATE, [Creation Date]) AS Creation_Date,
     [Modified Date] AS modifieddate,
-    [Original Requester] As originalrequester,
     [Group Contracts] as gc,
     [Input Fields] as inputfields,
     [Data Constraints] as dataconstraints
     FROM 
-    dbo.testpython
+    dbo.catalog_data
     WHERE [Report Type] = 'SSRS WIDOC Dashboard'
     ORDER BY [Name]
     OFFSET {offset} ROWS
@@ -199,7 +114,7 @@ def ssrs_widoc_dashboards(page, items_per_page):
             'column4': row.averagetime,
             'column5': row.Creation_Date,
             'column6': row.modifieddate,
-            'column7': row.originalrequester,
+            
             'column8': row.gc,
             'column9': row.inputfields,
             'column10': row.dataconstraints
@@ -237,7 +152,7 @@ def ssrs_report_data(page, items_per_page):
     offset = (page - 1) * items_per_page
 
     # Establish a connection to the SQL Server database using Windows Authentication
-    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=UPHP_Prod_Replica;Trusted_Connection=Yes;')
+    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=ReportCatalog;Trusted_Connection=Yes;')
     cursor = conn.cursor()
 
     # Write your SQL query directly in the Python script
@@ -249,12 +164,11 @@ def ssrs_report_data(page, items_per_page):
     [Average Execution Time (h:m:s:ms)] AS averagetime,
     CONVERT(DATE, [Creation Date]) AS Creation_Date,
     [Modified Date] AS modifieddate,
-    [Original Requester] As originalrequester,
     [Group Contracts] as gc,
     [Input Fields] as inputfields,
     [Data Constraints] as dataconstraints
     FROM 
-    dbo.testpython
+    dbo.catalog_data
     WHERE [Report Type] = 'SSRS Automated Reports'
     ORDER BY [Name]
     OFFSET {offset} ROWS
@@ -274,7 +188,6 @@ def ssrs_report_data(page, items_per_page):
             'column4': row.averagetime,
             'column5': row.Creation_Date,
             'column6': row.modifieddate,
-            'column7': row.originalrequester,
             'column8': row.gc,
             'column9': row.inputfields,
             'column10': row.dataconstraints
@@ -289,7 +202,7 @@ def ssrs_report_data(page, items_per_page):
 
 def perform_search_uphp_dashboards(query):
     # Establish a connection to the SQL Server database using Windows Authentication
-    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=UPHP_Prod_Replica;Trusted_Connection=Yes;')
+    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=ReportCatalog;Trusted_Connection=Yes;')
     cursor = conn.cursor()
 
     # Write your SQL query with the search term between '%' signs for wildcard matching
@@ -301,12 +214,11 @@ def perform_search_uphp_dashboards(query):
         [Average Execution Time (h:m:s:ms)] AS averagetime,
         CONVERT(DATE, [Creation Date]) AS Creation_Date,
         [Modified Date] AS modifieddate,
-        [Original Requester] As originalrequester,
         [Group Contracts] as gc,
         [Input Fields] as inputfields,
         [Data Constraints] as dataconstraints
     FROM 
-        dbo.testpython
+        dbo.catalog_data
     WHERE 
         [Name] LIKE ? AND [Report Type] = 'UPHP Dashboard'  -- Use parameterized query to prevent SQL injection
     ORDER BY 
@@ -326,7 +238,6 @@ def perform_search_uphp_dashboards(query):
             'column4': row.averagetime,
             'column5': row.Creation_Date,
             'column6': row.modifieddate,
-            'column7': row.originalrequester,
             'column8': row.gc,
             'column9': row.inputfields,
             'column10': row.dataconstraints,
@@ -342,7 +253,7 @@ def perform_search_uphp_dashboards(query):
 
 def perform_search_ssrs_dashboards(query):
     # Establish a connection to the SQL Server database using Windows Authentication
-    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=UPHP_Prod_Replica;Trusted_Connection=Yes;')
+    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=ReportCatalog;Trusted_Connection=Yes;')
     cursor = conn.cursor()
 
     # Write your SQL query with the search term between '%' signs for wildcard matching
@@ -354,12 +265,11 @@ def perform_search_ssrs_dashboards(query):
         [Average Execution Time (h:m:s:ms)] AS averagetime,
         CONVERT(DATE, [Creation Date]) AS Creation_Date,
         [Modified Date] AS modifieddate,
-        [Original Requester] As originalrequester,
         [Group Contracts] as gc,
         [Input Fields] as inputfields,
         [Data Constraints] as dataconstraints
     FROM 
-        dbo.testpython
+        dbo.catalog_data
     WHERE 
         [Name] LIKE ? AND [Report Type] = 'UPHP Dashboard'  -- Use parameterized query to prevent SQL injection
     ORDER BY 
@@ -379,7 +289,6 @@ def perform_search_ssrs_dashboards(query):
             'column4': row.averagetime,
             'column5': row.Creation_Date,
             'column6': row.modifieddate,
-            'column7': row.originalrequester,
             'column8': row.gc,
             'column9': row.inputfields,
             'column10': row.dataconstraints,
@@ -394,7 +303,7 @@ def perform_search_ssrs_dashboards(query):
 
 def perform_search_ssrs_automated_reports(query):
     # Establish a connection to the SQL Server database using Windows Authentication
-    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=UPHP_Prod_Replica;Trusted_Connection=Yes;')
+    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=ReportCatalog;Trusted_Connection=Yes;')
     cursor = conn.cursor()
 
     # Write your SQL query with the search term between '%' signs for wildcard matching
@@ -406,12 +315,11 @@ def perform_search_ssrs_automated_reports(query):
         [Average Execution Time (h:m:s:ms)] AS averagetime,
         CONVERT(DATE, [Creation Date]) AS Creation_Date,
         [Modified Date] AS modifieddate,
-        [Original Requester] As originalrequester,
         [Group Contracts] as gc,
         [Input Fields] as inputfields,
         [Data Constraints] as dataconstraints
     FROM 
-        dbo.testpython
+        dbo.catalog_data
     WHERE 
         [Name] LIKE ? AND [Report Type] = 'SSRS Automated Reports'  -- Use parameterized query to prevent SQL injection
     ORDER BY 
@@ -431,7 +339,6 @@ def perform_search_ssrs_automated_reports(query):
             'column4': row.averagetime,
             'column5': row.Creation_Date,
             'column6': row.modifieddate,
-            'column7': row.originalrequester,
             'column8': row.gc,
             'column9': row.inputfields,
             'column10': row.dataconstraints,
@@ -446,7 +353,7 @@ def perform_search_ssrs_automated_reports(query):
 
 def perform_search_ssrs_widoc_dashboards(query):
     # Establish a connection to the SQL Server database using Windows Authentication
-    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=UPHP_Prod_Replica;Trusted_Connection=Yes;')
+    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=ReportCatalog;Trusted_Connection=Yes;')
     cursor = conn.cursor()
 
     # Write your SQL query with the search term between '%' signs for wildcard matching
@@ -458,12 +365,11 @@ def perform_search_ssrs_widoc_dashboards(query):
         [Average Execution Time (h:m:s:ms)] AS averagetime,
         CONVERT(DATE, [Creation Date]) AS Creation_Date,
         [Modified Date] AS modifieddate,
-        [Original Requester] As originalrequester,
         [Group Contracts] as gc,
         [Input Fields] as inputfields,
         [Data Constraints] as dataconstraints
     FROM 
-        dbo.testpython
+        dbo.catalog_data
     WHERE 
         [Name] LIKE ? AND [Report Type] = 'SSRS WIDOC Dashboard'  -- Use parameterized query to prevent SQL injection
     ORDER BY 
@@ -483,7 +389,6 @@ def perform_search_ssrs_widoc_dashboards(query):
             'column4': row.averagetime,
             'column5': row.Creation_Date,
             'column6': row.modifieddate,
-            'column7': row.originalrequester,
             'column8': row.gc,
             'column9': row.inputfields,
             'column10': row.dataconstraints,
@@ -557,7 +462,7 @@ def fetch_data_from_database(page, items_per_page):
     offset = (page - 1) * items_per_page
 
     # Establish a connection to the SQL Server database using Windows Authentication
-    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=UPHP_Prod_Replica;Trusted_Connection=Yes;')
+    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=ReportCatalog;Trusted_Connection=Yes;')
     cursor = conn.cursor()
 
     # Write your SQL query directly in the Python script
@@ -569,12 +474,11 @@ def fetch_data_from_database(page, items_per_page):
     [Average Execution Time (h:m:s:ms)] AS averagetime,
     CONVERT(DATE, [Creation Date]) AS Creation_Date,
     [Modified Date] AS modifieddate,
-    [Original Requester] As originalrequester,
     [Group Contracts] as gc,
     [Input Fields] as inputfields,
     [Data Constraints] as dataconstraints
     FROM 
-    dbo.testpython
+    dbo.catalog_data
     WHERE [Report Type] = 'UPHP Dashboard'
     ORDER BY [Name]
     OFFSET {offset} ROWS
@@ -594,7 +498,6 @@ def fetch_data_from_database(page, items_per_page):
             'column4': row.averagetime,
             'column5': row.Creation_Date,
             'column6': row.modifieddate,
-            'column7': row.originalrequester,
             'column8': row.gc,
             'column9': row.inputfields,
             'column10': row.dataconstraints,

@@ -6,60 +6,61 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 {% block content %}
-<div id="accordion">
-    {% for entry in data %}
-    <div class="card">
-        <div class="card-header" id="heading{{ loop.index }}">
-            <h5 class="mb-0">
-                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{ loop.index }}" aria-expanded="true" aria-controls="collapse{{ loop.index }}">
-                    {{ entry['column1'] }}
-                </button>
-            </h5>
-        </div>
+<div class="container mt-4">
+    <h2>UPHP Dashboards</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Report Name</th>
+                <th>Data Constraints</th>
+                <th>Input Fields</th>
+                <th>Group Contracts</th>
+                <th>Modified Date</th>
+                <th>Creation Date</th>
+                <th>Avg. Execution Time</th>
+                <th>Description</th>
+                <th>Template</th>
+                <th>Document</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in data %}
+            <tr>
+                <td>{{ entry['column1'] }}</td>
+                <td>{{ entry['column10'] }}</td>
+                <td>{{ entry['column9'] }}</td>
+                <td>{{ entry['column8'] }}</td>
+                <td>{{ entry['column6'] }}</td>
+                <td>{{ entry['column5'] }}</td>
+                <td>{{ entry['column4'] }}</td>
+                <td>{{ entry['column3'] }}</td>
+                <td>
+                    <a href="{{ entry['column2'] }}" class="btn btn-primary btn-sm" target="_blank" download>Download Template</a>
+                </td>
+                <td>
+                    {% if entry['document_link'] %}
+                    <a href="{{ entry['document_link'] }}" class="btn btn-primary btn-sm" target="_blank" download>Download Document</a>
+                    {% else %}
+                    <div class="btn btn-secondary btn-sm disabled-button" disabled>No Document Available</div>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-        <div id="collapse{{ loop.index }}" class="collapse" aria-labelledby="heading{{ loop.index }}" data-parent="#accordion">
-            <div class="card-body">
-                <p>Data Constraints:{{entry['column10']}}</p>
-                <p>Input Fields:{{entry['column9']}}</p>
-                <p>Group Contracts:{{entry['column8']}}</p>
-                <p>Original Requester:{{entry['column7']}}</p>
-                <p>Modified Date: {{entry['column6']}}</p>
-                <p>Creation Date: {{entry['column5']}}</p>
-                <p>Avg. Execution Time: {{ entry['column4'] }}</p>
-                <p>Description: {{ entry['column3'] }}</p>
-                <a href="{{ entry['column2'] }}" class="btn btn-primary btn-sm" target="_blank" download>Download Template</a>
-                {% if entry['document_link'] %}
-                <a href="{{ entry['document_link'] }}" class="btn btn-primary btn-sm" target="_blank" download>Download Document</a>
-                {% else %}
-                <div class="btn btn-secondary btn-sm disabled-button" disabled>No Document Available</div>
-                {% endif %}
-            </div>
-        </div>
-        {% endfor %}
-
-    </div>
     <!-- Pagination controls -->
-    <div class="container mt-4">
-        {% if next_page_number is not none %}
-        <div class="row">
-            <div class="col-sm-6">
-                {% if previous_page_number is not none %}
-                <a href="{{ url_for('uphp_dashboard_page', page=previous_page_number) }}" class="btn btn-primary">Previous Page</a>
-                {% endif %}
-            </div>
-            <div class="col-sm-6 text-right">
-                <a href="{{ url_for('uphp_dashboard_page', page=next_page_number) }}" class="btn btn-primary">Next Page</a>
-            </div>
+    <div class="row">
+        <div class="col-sm-6">
+            {% if previous_page_number is not none %}
+            <a href="{{ url_for('uphp_dashboard_page', page=previous_page_number) }}" class="btn btn-primary">Previous Page</a>
+            {% endif %}
         </div>
-        {% else %}
-        <div class="row">
-            <div class="col-sm-12 text-center">
-                {% if previous_page_number is not none %}
-                <a href="{{ url_for('uphp_dashboard_page', page=previous_page_number) }}" class="btn btn-primary">Previous Page</a>
-                {% endif %}
-            </div>
+        <div class="col-sm-6 text-right">
+            {% if next_page_number is not none %}
+            <a href="{{ url_for('uphp_dashboard_page', page=next_page_number) }}" class="btn btn-primary">Next Page</a>
+            {% endif %}
         </div>
-        {% endif %}
     </div>
 </div>
-    {% endblock %}
+{% endblock %}
