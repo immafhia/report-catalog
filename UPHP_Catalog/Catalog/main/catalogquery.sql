@@ -39,16 +39,6 @@ INTO #report_creation_date
 FROM REPORT.Dashboard.dbo.progress p
 GROUP BY p.id
 
-IF OBJECT_ID('tempdb..#report_original_requester') IS NOT NULL
-	DROP TABLE #report_original_requester
-SELECT 
-	p.id,
-	MIN(p.username) original_requester
-INTO #report_original_requester
-FROM REPORT.Dashboard.dbo.progress p
-GROUP BY p.id
-
-
 INSERT INTO #results
 (
     [Report Type],
@@ -79,9 +69,6 @@ LEFT JOIN #avg_time avg_tm
 
 LEFT JOIN #report_creation_date rcd
 	ON rcd.id = avg_tm.id
-
-LEFT JOIN #report_original_requester
-ON #report_original_requester.id = r.report_id
 
 WHERE r.type = 'report'
 	AND r.isDeleted = 0
