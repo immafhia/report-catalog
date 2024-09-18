@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+{% block content %}
+<!--Main table of page that contains the catalog data-->
+<div class="container mt-4">
+    <h2>SSRS Automated Reports</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th style="white-space: nowrap;">Report Name</th>
+                <th style="white-space: nowrap;">Input Fields</th>
+                <th class="text-center" style="white-space: nowrap;">Group Contracts</th>
+                <th style="white-space: nowrap;">Modified Date</th>
+                <th style="white-space: nowrap;">Creation Date</th>
+                <th style="white-space: nowrap;">Avg. Execution Time</th>
+                <th style="white-space: nowrap;">Description</th>
+                <th style="white-space: nowrap;">Template</th>
+                <th style="white-space: nowrap;">Document</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for entry in data %}
+            <tr>
+                <td>{{ entry['column1'] }}</td>
+                <td style="white-space: nowrap;">{{ entry['column9'] }}</td>
+                <td style="white-space: nowrap;">{{ entry['column8'] }}</td>
+                <td class="date-column" data-timestamp="{{ entry['column6'] }}"></td>
+                <td>{{ entry['column5'] }}</td>
+                <td>{{ entry['column4'] }}</td>
+                <td>{{ entry['column3'] }}</td>
+                <td>
+                    <a href="{{ entry['column2'] }}" class="btn btn-primary btn-sm" target="_blank" download>Download Template</a>
+                </td>
+                <td>
+                    {% if entry['document_link'] %}
+                    <a href="{{ entry['document_link'] }}" class="btn btn-primary btn-sm" target="_blank" download>Download Document</a>
+                    {% else %}
+                    <div class="btn btn-secondary btn-sm disabled-button" disabled>No Document Available</div>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <!-- End of Table Content -->
+    <!-- Previous and Next Page controls -->
+    <div class="row">
+        <div class="col-sm-6">
+            {% if previous_page_number is not none %}
+            <a href="{{ url_for('ssrs_automated_reports_page', page=previous_page_number) }}" class="btn btn-primary">Previous Page</a>
+            {% endif %}
+        </div>
+        <div class="col-sm-6 text-right">
+            {% if next_page_number is not none %}
+            <a href="{{ url_for('ssrs_automated_reports_page', page=next_page_number) }}" class="btn btn-primary">Next Page</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!--Javascript to format the Modified and Created Date to just a date without a timestamp-->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll('.date-column').forEach(function (element) {
+            let timestamp = new Date(element.getAttribute('data-timestamp'));
+            let formattedDate = timestamp.toISOString().split('T')[0]; // Formats as YYYY-MM-DD
+            element.textContent = formattedDate;
+        });
+    });
+</script>
+{% endblock %}

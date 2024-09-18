@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="jumbotron">
+    <h1 style="text-align: center;">UPHP Catalog</h1>
+    <p class="lead">Welcome to the UPHP Catalog. This is a collection of reports among all of our platforms. Free to search and find what report/s you wish to learn about. Explore our comprehensive collection of reports across various platforms. Each button below represents a unique category of reports. Click the buttons below to take you to which type of report you are looking for.</p>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <a class="btn btn-primary btn-lg btn-block mb-3" href="/ssrs_widoc_page">SSRS WIDOC Dashboards</a>
+    </div>
+    <div class="col-md-3">
+        <a class="btn btn-primary btn-lg btn-block mb-3" href="/uphp_dashboard_page">UPHP Dashboards</a>
+    </div>
+    <div class="col-md-3">
+        <a class="btn btn-primary btn-lg btn-block mb-3" href="/ssrs_dashboard_page">SSRS Dashboards</a>
+    </div>
+    <div class="col-md-3">
+        <a class="btn btn-primary btn-lg btn-block mb-3" href="/ssrs_automated_reports">SSRS Automated Reports</a>
+    </div>
+</div>
+
+{% endblock %}

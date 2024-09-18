@@ -1,0 +1,100 @@
+{% extends "layout.html" %}
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+{% block content %}
+
+<div class="container mt-5">
+    <h2 class="mb-4">{{ title }}</h2>
+    <form class="form-inline mb-4" method="get" action="/search">
+        <label class="sr-only" for="search_query">Search for a Report:</label>
+        <input type="text" class="form-control mr-2" id="search_query" name="query" required>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    <!-- Render search results for each category -->
+    <!-- Example for SSRS Automated Reports -->
+    {% if ssrs_automated_reports_results %}
+    <div class="container mt-4">
+        <h2>SSRS Automated Reports</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Report Name</th>
+                    <th>Template Link</th>
+                    <th>Description</th>
+                    <!-- Add more column headers as needed -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in ssrs_automated_reports_results %}
+                <tr>
+                    <td>{{ result.column1 }}</td>
+                    <td>
+                        <a href="{{ result.column2 }}" class="btn btn-primary btn-sm">Download Template</a>
+                    </td>
+                    <td>{{ result.column3 }}</td>
+                    <!-- Add more columns as needed -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+
+    {% if uphp_dashboard_results %}
+    <div class="container mt-4">
+        <h2>UPHP Dashboards</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Report Name</th>
+                    <th>Template Link</th>
+                    <th>Description</th>
+                    <!-- Add more column headers as needed -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in uphp_dashboard_results %}
+                <tr>
+                    <td>{{ result.column1 }}</td>
+                    <td>
+                        <a href="{{ result.column2 }}" class="btn btn-primary btn-sm">Download Template</a>
+                    </td>
+                    <td>{{ result.column3 }}</td>
+                    <!-- Add more columns as needed -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    {% if ssrs_widoc_dashboard_results %}
+    <div class="container mt-4">
+        <h2>SSRS WIDOC Dashboards</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Report Name</th>
+                    <th>Template Link</th>
+                    <th>Description</th>
+                    <!-- Add more column headers as needed -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in ssrs_widoc_dashboard_results %}
+                <tr>
+                    <td>{{ result.column1 }}</td>
+                    <td>
+                        <a href="{{ result.column2 }}" class="btn btn-primary btn-sm">Download Template</a>
+                    </td>
+                    <td>{{ result.column3 }}</td>
+                    <!-- Add more columns as needed -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
