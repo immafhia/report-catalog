@@ -1,5 +1,12 @@
 /*This is the query that will update the catalog data table with updated data*/
 
+
+/*
+CHANGE LOG
+============================================
+08/26/2024 Brad Maison TFS#6680: Removed data constraints column at request of PC
+============================================
+*/
 TRUNCATE TABLE [ReportCatalog].[dbo].[catalog_data]
 
 IF OBJECT_ID('tempdb..#results', 'U') IS NOT NULL
@@ -14,7 +21,6 @@ CREATE TABLE #results (
 	[Link] VARCHAR(MAX),
 	[Template Link] VARCHAR(MAX),
 	[Group Contracts] VARCHAR(MAX),
-	[Data Constraints] VARCHAR(MAX),
 	[Input Fields] VARCHAR(MAX)
 )
 
@@ -138,8 +144,7 @@ SELECT
 	r.Link,
 	r.[Template Link],
 	r.[Group Contracts],
-	r.[Input Fields],
-	r.[Data Constraints]
+	r.[Input Fields]
 INTO #main
 FROM #results r
 WHERE r.Name <> ''
@@ -148,18 +153,20 @@ ORDER BY r.[Report Type], r.Name
 INSERT INTO ReportCatalog.dbo.catalog_data
 
 SELECT
-[Report Type],
-Name,
-Description,
-[Creation Date],
-[Modified Date],
-[Average Execution Time (h:m:s:ms)],
-Link,
-[Template Link],
-[Group Contracts],
-[Input Fields],
-[Data Constraints]
-FROM #main
+m.[Report Type],
+m.Name,
+m.Description,
+m.[Creation Date],
+m.[Modified Date],
+m.[Average Execution Time (h:m:s:ms)],
+m.Link,
+m.[Template Link],
+cmd.[Group Contracts],
+cmd.[Input Fields]
+FROM #main m
+
+LEFT JOIN ReportCatalog.dbo.catalog_manual_data cmd
+ON cmd.Name = m.Name
 
 WHERE [Report Type] <> 'SSRS Dashboard'
 ORDER BY [Report Type]

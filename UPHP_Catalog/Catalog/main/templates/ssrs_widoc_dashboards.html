@@ -6,31 +6,30 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 {% block content %}
+<!--Main table of page that contains the catalog data-->
 <div class="container mt-4">
     <h2>SSRS WIDOC Dashboards</h2>
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>Report Name</th>
-                <th>Data Constraints</th>
-                <th>Input Fields</th>
-                <th>Group Contracts</th>
-                <th>Modified Date</th>
-                <th>Creation Date</th>
-                <th>Avg. Execution Time</th>
-                <th>Description</th>
-                <th>Template</th>
-                <th>Document</th>
+                <th style="white-space: nowrap;">Report Name</th>
+                <th style="white-space: nowrap;">Input Fields</th>
+                <th class="text-center" style="white-space: nowrap;">Group Contracts</th>
+                <th style="white-space: nowrap;">Modified Date</th>
+                <th style="white-space: nowrap;">Creation Date</th>
+                <th style="white-space: nowrap;">Avg. Execution Time</th>
+                <th style="white-space: nowrap;">Description</th>
+                <th style="white-space: nowrap;">Template</th>
+                <th style="white-space: nowrap;">Document</th>
             </tr>
         </thead>
         <tbody>
             {% for entry in data %}
             <tr>
                 <td>{{ entry['column1'] }}</td>
-                <td>{{ entry['column10'] }}</td>
-                <td>{{ entry['column9'] }}</td>
-                <td>{{ entry['column8'] }}</td>
-                <td>{{ entry['column6'] }}</td>
+                <td style="white-space: nowrap;">{{ entry['column9'] }}</td>
+                <td style="white-space: nowrap;">{{ entry['column8'] }}</td>
+                <td class="date-column" data-timestamp="{{ entry['column6'] }}"></td>
                 <td>{{ entry['column5'] }}</td>
                 <td>{{ entry['column4'] }}</td>
                 <td>{{ entry['column3'] }}</td>
@@ -48,8 +47,9 @@
             {% endfor %}
         </tbody>
     </table>
+    <!-- End of Table Content -->
 
-    <!-- Pagination controls -->
+    <!-- Previous and Next Page controls -->
     <div class="row">
         <div class="col-sm-6">
             {% if previous_page_number is not none %}
@@ -63,4 +63,15 @@
         </div>
     </div>
 </div>
+
+<!--Javascript to format the Modified and Created Date to just a date without a timestamp-->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll('.date-column').forEach(function (element) {
+            let timestamp = new Date(element.getAttribute('data-timestamp'));
+            let formattedDate = timestamp.toISOString().split('T')[0]; // Formats as YYYY-MM-DD
+            element.textContent = formattedDate;
+        });
+    });
+</script>
 {% endblock %}

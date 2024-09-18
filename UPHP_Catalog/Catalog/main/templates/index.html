@@ -3,7 +3,7 @@
 {% block content %}
 <style>
     .button-wrapper {
-        max-width: 900px; /* Adjust this value as needed */
+        max-width: 900px; 
         margin: 0 auto;
         display: flex;
         justify-content: space-around;
@@ -11,18 +11,18 @@
     }
 
         .button-wrapper .col-md-3 {
-            flex: 1; /* Allow columns to grow and take available space */
-            padding: 0 10px; /* Adjust padding between columns */
+            flex: 1; 
+            padding: 0 10px; 
         }
 
         .button-wrapper .btn {
-            width: 100%; /* Make buttons take full width of their container */
-            white-space: normal; /* Allow button text to wrap if necessary */
+            width: 100%; 
+            white-space: normal; 
         }
 
     .textbox-wrapper {
-        max-width: 900px; /* Adjust this value as needed */
-        margin: 20px auto; /* Add some margin for spacing */
+        max-width: 900px; 
+        margin: 20px auto; 
         text-align: center;
     }
 
@@ -32,7 +32,7 @@
             font-size: 16px;
         }
 </style>
-
+<!--Home Page Title and Description-->
 <div class="jumbotron">
     <h1 style="text-align: center;">UPHP Report Catalog</h1>
     <p class="lead">Welcome to the UPHP Report Catalog! This catalog is dedicated to collecting, organizing, and storing information from various reports and their corresponding platforms, making it easily accessible for users. Each report in the catalog includes essential data points, such as:</p>
@@ -41,12 +41,13 @@
         <li>Creation and last modification dates</li>
         <li>Report description</li>
         <li>Average execution time</li>
-        <li>Data Constraints</li>
+        <li>Input Fields</li>
     </ul>
     <p class="lead">Use the buttons below to explore different report categories. To find a specific report, enter its name in the search box and press "Enter" to view results across all categories.</p>
 </div>
+<!----------------------------------->
 
-
+<!--Buttons to go to a different page in the website-->
 <div class="textbox-wrapper">
     <input type="text" id="search-input" placeholder="Enter Search Criteria...">
 </div>
@@ -66,6 +67,7 @@
 {% endblock %}
 
 {% block scripts %}
+<!--Javascript code to let the searchbox in the main page be activated by only typing in a word and pressing the enter key-->
 <script>
     // Get the search input element
     var searchInput = document.getElementById('search-input');

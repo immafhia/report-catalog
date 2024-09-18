@@ -12,7 +12,7 @@ import pyodbc
 
 #COMMENT THIS PORTION OF CODE OUT FOR LOCAL TESTING#
 ################################################################
-# Define the log folder path
+#Define the log folder path
 log_folder_path = "logs"
 
 # Check if the log folder exists
@@ -91,8 +91,7 @@ def ssrs_widoc_dashboards(page, items_per_page):
     CONVERT(DATE, [Creation Date]) AS Creation_Date,
     [Modified Date] AS modifieddate,
     [Group Contracts] as gc,
-    [Input Fields] as inputfields,
-    [Data Constraints] as dataconstraints
+    [Input Fields] as inputfields  
     FROM 
     dbo.catalog_data
     WHERE [Report Type] = 'SSRS WIDOC Dashboard'
@@ -113,12 +112,9 @@ def ssrs_widoc_dashboards(page, items_per_page):
             'column3': row.description,
             'column4': row.averagetime,
             'column5': row.Creation_Date,
-            'column6': row.modifieddate,
-            
+            'column6': row.modifieddate,   
             'column8': row.gc,
             'column9': row.inputfields,
-            'column10': row.dataconstraints
-            # Add more columns as needed
         }
         data.append(entry)
 
@@ -165,8 +161,7 @@ def ssrs_report_data(page, items_per_page):
     CONVERT(DATE, [Creation Date]) AS Creation_Date,
     [Modified Date] AS modifieddate,
     [Group Contracts] as gc,
-    [Input Fields] as inputfields,
-    [Data Constraints] as dataconstraints
+    [Input Fields] as inputfields
     FROM 
     dbo.catalog_data
     WHERE [Report Type] = 'SSRS Automated Reports'
@@ -189,8 +184,7 @@ def ssrs_report_data(page, items_per_page):
             'column5': row.Creation_Date,
             'column6': row.modifieddate,
             'column8': row.gc,
-            'column9': row.inputfields,
-            'column10': row.dataconstraints
+            'column9': row.inputfields           
             # Add more columns as needed
         }
         data.append(entry)
@@ -215,8 +209,7 @@ def perform_search_uphp_dashboards(query):
         CONVERT(DATE, [Creation Date]) AS Creation_Date,
         [Modified Date] AS modifieddate,
         [Group Contracts] as gc,
-        [Input Fields] as inputfields,
-        [Data Constraints] as dataconstraints
+        [Input Fields] as inputfields     
     FROM 
         dbo.catalog_data
     WHERE 
@@ -239,8 +232,7 @@ def perform_search_uphp_dashboards(query):
             'column5': row.Creation_Date,
             'column6': row.modifieddate,
             'column8': row.gc,
-            'column9': row.inputfields,
-            'column10': row.dataconstraints,
+            'column9': row.inputfields
             # Add more columns as needed
         }
         search_results.append(entry)
@@ -266,8 +258,8 @@ def perform_search_ssrs_dashboards(query):
         CONVERT(DATE, [Creation Date]) AS Creation_Date,
         [Modified Date] AS modifieddate,
         [Group Contracts] as gc,
-        [Input Fields] as inputfields,
-        [Data Constraints] as dataconstraints
+        [Input Fields] as inputfields
+        
     FROM 
         dbo.catalog_data
     WHERE 
@@ -290,8 +282,7 @@ def perform_search_ssrs_dashboards(query):
             'column5': row.Creation_Date,
             'column6': row.modifieddate,
             'column8': row.gc,
-            'column9': row.inputfields,
-            'column10': row.dataconstraints,
+            'column9': row.inputfields
             # Add more columns as needed
         }
         search_results.append(entry)
@@ -316,8 +307,7 @@ def perform_search_ssrs_automated_reports(query):
         CONVERT(DATE, [Creation Date]) AS Creation_Date,
         [Modified Date] AS modifieddate,
         [Group Contracts] as gc,
-        [Input Fields] as inputfields,
-        [Data Constraints] as dataconstraints
+        [Input Fields] as inputfields
     FROM 
         dbo.catalog_data
     WHERE 
@@ -340,8 +330,7 @@ def perform_search_ssrs_automated_reports(query):
             'column5': row.Creation_Date,
             'column6': row.modifieddate,
             'column8': row.gc,
-            'column9': row.inputfields,
-            'column10': row.dataconstraints,
+            'column9': row.inputfields
             # Add more columns as needed
         }
         search_results.append(entry)
@@ -366,8 +355,8 @@ def perform_search_ssrs_widoc_dashboards(query):
         CONVERT(DATE, [Creation Date]) AS Creation_Date,
         [Modified Date] AS modifieddate,
         [Group Contracts] as gc,
-        [Input Fields] as inputfields,
-        [Data Constraints] as dataconstraints
+        [Input Fields] as inputfields
+        
     FROM 
         dbo.catalog_data
     WHERE 
@@ -390,8 +379,7 @@ def perform_search_ssrs_widoc_dashboards(query):
             'column5': row.Creation_Date,
             'column6': row.modifieddate,
             'column8': row.gc,
-            'column9': row.inputfields,
-            'column10': row.dataconstraints,
+            'column9': row.inputfields
             # Add more columns as needed
         }
         search_results.append(entry)
@@ -475,8 +463,8 @@ def fetch_data_from_database(page, items_per_page):
     CONVERT(DATE, [Creation Date]) AS Creation_Date,
     [Modified Date] AS modifieddate,
     [Group Contracts] as gc,
-    [Input Fields] as inputfields,
-    [Data Constraints] as dataconstraints
+    [Input Fields] as inputfields
+    
     FROM 
     dbo.catalog_data
     WHERE [Report Type] = 'UPHP Dashboard'
@@ -500,7 +488,6 @@ def fetch_data_from_database(page, items_per_page):
             'column6': row.modifieddate,
             'column8': row.gc,
             'column9': row.inputfields,
-            'column10': row.dataconstraints,
             'document_link': dashboard_to_document_mapping.get(row.ReportType)  # Get document link from manual mapping
             # Add more columns as needed
         }
