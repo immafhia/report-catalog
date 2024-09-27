@@ -5,6 +5,7 @@
 CHANGE LOG
 ============================================
 08/26/2024 Brad Maison TFS#6680: Removed data constraints column at request of PC
+09/27/2024 Brad Maison TFS#9264: Updated average runtime caclculation to work as BIGINT to remove any arithimitc overflow.
 ============================================
 */
 TRUNCATE TABLE [ReportCatalog].[dbo].[catalog_data]
@@ -86,7 +87,7 @@ IF OBJECT_ID('tempdb..#report_run_time', 'U') IS NOT NULL
 	DROP TABLE #report_run_time
 SELECT 
 	c.Name,
-	CONVERT(VARCHAR,DATEADD(ms,AVG(DATEDIFF(MILLISECOND, l.TimeStart, l.TimeEnd)),0), 114) avg_time
+    CONVERT(VARCHAR, DATEADD(ms, AVG(CAST(DATEDIFF(MILLISECOND, l.TimeStart, l.TimeEnd) AS BIGINT)), 0), 114) AS avg_time
 INTO #report_run_time
 FROM [SSRSReportServer].[dbo].[ExecutionLog] AS l
 INNER JOIN [SSRSReportServer].[dbo].[Catalog] AS c ON l.ReportID = C.ItemID
