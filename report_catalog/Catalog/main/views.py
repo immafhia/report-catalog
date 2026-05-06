@@ -10,6 +10,41 @@ from datetime import datetime
 from flask import render_template, request, redirect, url_for
 import pyodbc
 
+# dbo.catalog_data [Report Type] for web/dashboard platform rows (matches catalog load).
+WEB_PLATFORM_DASHBOARD_REPORT_TYPE = os.environ.get(
+    'CATALOG_WEB_PLATFORM_DASHBOARD_TYPE',
+    'Web Dashboard',
+)
+
+# dbo.catalog_data [Report Type] for SSRS-hosted “program dashboard” subtree (neutral label; matches catalog ETL CASE).
+SSRS_PROGRAM_DASHBOARD_REPORT_TYPE = os.environ.get(
+    'CATALOG_SSRS_PROGRAM_DASHBOARD_TYPE',
+    'SSRS Program Dashboards',
+)
+
+
+def catalog_db_connection():
+    """
+    Open ODBC connection to the report catalog SQL Server database.
+    Set CATALOG_SQL_SERVER, CATALOG_SQL_DATABASE, CATALOG_ODBC_DRIVER in the environment,
+    or CATALOG_SQL_USER / CATALOG_SQL_PASSWORD for SQL auth instead of Trusted_Connection.
+    """
+    driver = os.environ.get('CATALOG_ODBC_DRIVER', '{ODBC Driver 17 for SQL Server}')
+    server = os.environ.get('CATALOG_SQL_SERVER', 'localhost')
+    database = os.environ.get('CATALOG_SQL_DATABASE', 'ReportCatalog')
+    user = os.environ.get('CATALOG_SQL_USER', '').strip()
+    password = os.environ.get('CATALOG_SQL_PASSWORD', '').strip()
+    if user:
+        conn_str = (
+            f'DRIVER={driver};SERVER={server};DATABASE={database};UID={user};PWD={password};'
+        )
+    else:
+        conn_str = (
+            f'DRIVER={driver};SERVER={server};DATABASE={database};Trusted_Connection=yes;'
+        )
+    return pyodbc.connect(conn_str)
+
+
 #COMMENT THIS PORTION OF CODE OUT FOR LOCAL TESTING#
 ################################################################
 #Define the log folder path
@@ -52,14 +87,14 @@ def desired_page():
     # Always redirect to the search.html page
     return redirect(url_for('search'))
 
-@app.route('/ssrs_widoc_page')
-def ssrs_widoc_page():
+@app.route('/ssrs_program_dashboards')
+def ssrs_program_dashboards_page():
 
     page = request.args.get('page', default=1, type=int)
     items_per_page = 100  # Set the number of items to display per page
 
     # Fetch data from the database based on the current page and items per page
-    data = ssrs_widoc_dashboards(page, items_per_page)
+    data = ssrs_program_dashboards(page, items_per_page)
 
     # Calculate the next page number
     next_page_number = page + 1 if len(data) >= items_per_page else None
@@ -70,15 +105,16 @@ def ssrs_widoc_page():
     previous_page_number = page - 1 if page > 1 else None
 
     # Pass data, page number, items_per_page, and next_page_number to the template
-    return render_template('ssrs_widoc_dashboards.html', data=data, title='SSRS WIDOC Dashboards', page=page, items_per_page=items_per_page, next_page_number=next_page_number, previous_page_number=previous_page_number)
+    return render_template('ssrs_program_dashboards.html', data=data, title='SSRS program dashboards', page=page, items_per_page=items_per_page, next_page_number=next_page_number, previous_page_number=previous_page_number)
 
-def ssrs_widoc_dashboards(page, items_per_page):
+def ssrs_program_dashboards(page, items_per_page):
 
     # Calculate the offset to fetch the correct items based on the page number
     offset = (page - 1) * items_per_page
+    _rt = SSRS_PROGRAM_DASHBOARD_REPORT_TYPE.replace("'", "''")
 
     # Establish a connection to the SQL Server database using Windows Authentication
-    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=ReportCatalog;Trusted_Connection=Yes;')
+    conn = catalog_db_connection()
     cursor = conn.cursor()
 
     # Write your SQL query directly in the Python script
@@ -94,7 +130,7 @@ def ssrs_widoc_dashboards(page, items_per_page):
     [Input Fields] as inputfields  
     FROM 
     dbo.catalog_data
-    WHERE [Report Type] = 'SSRS WIDOC Dashboard'
+    WHERE [Report Type] = '{_rt}'
     ORDER BY [Name]
     OFFSET {offset} ROWS
     FETCH NEXT {items_per_page} ROWS ONLY
@@ -148,7 +184,7 @@ def ssrs_report_data(page, items_per_page):
     offset = (page - 1) * items_per_page
 
     # Establish a connection to the SQL Server database using Windows Authentication
-    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=ReportCatalog;Trusted_Connection=Yes;')
+    conn = catalog_db_connection()
     cursor = conn.cursor()
 
     # Write your SQL query directly in the Python script
@@ -194,10 +230,12 @@ def ssrs_report_data(page, items_per_page):
 
     return data
 
-def perform_search_uphp_dashboards(query):
+def perform_search_web_platform_dashboards(query):
     # Establish a connection to the SQL Server database using Windows Authentication
-    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=ReportCatalog;Trusted_Connection=Yes;')
+    conn = catalog_db_connection()
     cursor = conn.cursor()
+
+    _rt = WEB_PLATFORM_DASHBOARD_REPORT_TYPE.replace("'", "''")
 
     # Write your SQL query with the search term between '%' signs for wildcard matching
     sql_query = f'''
@@ -213,7 +251,7 @@ def perform_search_uphp_dashboards(query):
     FROM 
         dbo.catalog_data
     WHERE 
-        [Name] LIKE ? AND [Report Type] = 'UPHP Dashboard'  -- Use parameterized query to prevent SQL injection
+        [Name] LIKE ? AND [Report Type] = '{_rt}'
     ORDER BY 
         [Name]
     '''
@@ -245,7 +283,7 @@ def perform_search_uphp_dashboards(query):
 
 def perform_search_ssrs_dashboards(query):
     # Establish a connection to the SQL Server database using Windows Authentication
-    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=ReportCatalog;Trusted_Connection=Yes;')
+    conn = catalog_db_connection()
     cursor = conn.cursor()
 
     # Write your SQL query with the search term between '%' signs for wildcard matching
@@ -263,7 +301,7 @@ def perform_search_ssrs_dashboards(query):
     FROM 
         dbo.catalog_data
     WHERE 
-        [Name] LIKE ? AND [Report Type] = 'UPHP Dashboard'  -- Use parameterized query to prevent SQL injection
+        [Name] LIKE ? AND [Report Type] = 'SSRS Dashboard'
     ORDER BY 
         [Name]
     '''
@@ -294,7 +332,7 @@ def perform_search_ssrs_dashboards(query):
 
 def perform_search_ssrs_automated_reports(query):
     # Establish a connection to the SQL Server database using Windows Authentication
-    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=ReportCatalog;Trusted_Connection=Yes;')
+    conn = catalog_db_connection()
     cursor = conn.cursor()
 
     # Write your SQL query with the search term between '%' signs for wildcard matching
@@ -340,10 +378,12 @@ def perform_search_ssrs_automated_reports(query):
 
     return search_results
 
-def perform_search_ssrs_widoc_dashboards(query):
+def perform_search_ssrs_program_dashboards(query):
     # Establish a connection to the SQL Server database using Windows Authentication
-    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=ReportCatalog;Trusted_Connection=Yes;')
+    conn = catalog_db_connection()
     cursor = conn.cursor()
+
+    _rt = SSRS_PROGRAM_DASHBOARD_REPORT_TYPE.replace("'", "''")
 
     # Write your SQL query with the search term between '%' signs for wildcard matching
     sql_query = f'''
@@ -360,7 +400,7 @@ def perform_search_ssrs_widoc_dashboards(query):
     FROM 
         dbo.catalog_data
     WHERE 
-        [Name] LIKE ? AND [Report Type] = 'SSRS WIDOC Dashboard'  -- Use parameterized query to prevent SQL injection
+        [Name] LIKE ? AND [Report Type] = '{_rt}'
     ORDER BY 
         [Name]
     '''
@@ -395,31 +435,31 @@ def search():
 
     # Initialize search result variables as None
     ssrs_automated_reports_results = None
-    uphp_dashboard_results = None
+    web_dashboard_results = None
     ssrs_dashboard_results = None
-    ssrs_widoc_dashboard_results = None
+    ssrs_program_dashboard_results = None
 
     # Check if a search query has been submitted
     if query:
         # Call your functions to fetch search results based on the query for different categories
         ssrs_automated_reports_results = perform_search_ssrs_automated_reports(query)
-        uphp_dashboard_results = perform_search_uphp_dashboards(query)
+        web_dashboard_results = perform_search_web_platform_dashboards(query)
         ssrs_dashboard_results = perform_search_ssrs_dashboards(query)
-        ssrs_widoc_dashboard_results = perform_search_ssrs_widoc_dashboards(query)
+        ssrs_program_dashboard_results = perform_search_ssrs_program_dashboards(query)
 
     # Render the search results template with the search results
     return render_template('search.html', title='Search Reports',
                            ssrs_automated_reports_results=ssrs_automated_reports_results,
-                           uphp_dashboard_results=uphp_dashboard_results,
+                           web_dashboard_results=web_dashboard_results,
                            ssrs_dashboard_results=ssrs_dashboard_results,
-                           ssrs_widoc_dashboard_results=ssrs_widoc_dashboard_results)
+                           ssrs_program_dashboard_results=ssrs_program_dashboard_results)
 
 
 
 
 
-@app.route('/uphp_dashboard_page')
-def uphp_dashboard_page():
+@app.route('/web_dashboards')
+def web_dashboard_catalog():
     page = request.args.get('page', default=1, type=int)
     items_per_page = 100  # Set the number of items to display per page
 
@@ -435,7 +475,7 @@ def uphp_dashboard_page():
     previous_page_number = page - 1 if page > 1 else None
 
     # Pass data, page number, items_per_page, and next_page_number to the template
-    return render_template('uphp_dashboard_page.html', data=data, title='UPHP Dashboards', page=page, items_per_page=items_per_page, next_page_number=next_page_number, previous_page_number=previous_page_number)
+    return render_template('web_dashboard_page.html', data=data, title='Web Dashboard Catalog', page=page, items_per_page=items_per_page, next_page_number=next_page_number, previous_page_number=previous_page_number)
 
 
 def fetch_data_from_database(page, items_per_page):
@@ -448,9 +488,10 @@ def fetch_data_from_database(page, items_per_page):
 
     # Calculate the offset to fetch the correct items based on the page number
     offset = (page - 1) * items_per_page
+    _rt = WEB_PLATFORM_DASHBOARD_REPORT_TYPE.replace("'", "''")
 
     # Establish a connection to the SQL Server database using Windows Authentication
-    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=REPORT;DATABASE=ReportCatalog;Trusted_Connection=Yes;')
+    conn = catalog_db_connection()
     cursor = conn.cursor()
 
     # Write your SQL query directly in the Python script
@@ -467,7 +508,7 @@ def fetch_data_from_database(page, items_per_page):
     
     FROM 
     dbo.catalog_data
-    WHERE [Report Type] = 'UPHP Dashboard'
+    WHERE [Report Type] = '{_rt}'
     ORDER BY [Name]
     OFFSET {offset} ROWS
     FETCH NEXT {items_per_page} ROWS ONLY

@@ -60,6 +60,12 @@ db.sqlite3
 instance/
 .webassets-cache
 
+# Logs and IDE noise (portfolio)
+**/logs/*.log
+**/logs/*.bak
+**/desktop.ini
+
+
 # Scrapy stuff:
 .scrapy
 
@@ -104,4 +110,4 @@ venv.bak/
 .mypy_cache/
 .vs/
 obj/
-.bak
+*.bak

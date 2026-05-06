@@ -3,7 +3,7 @@ This snippet is used to update the group contracts and input fields of the catal
 
 
 =====CHANGE LOG======
-09/18/2024 Brad Maison TFS#6680: Snippet created
+Initial manual row template for enrichment join.
 =====================
 */
 
@@ -16,6 +16,6 @@ INSERT INTO ReportCatalog.dbo.catalog_manual_data
 VALUES
 ( 
 'N/A',		--Enter the name of ther report
-'N/A',		--Enter the group contracts used in the report in a comma separated list. Ex. 'UPHP MEDICAID, UPHPMHL', 'UPHP CSHCS'
+'N/A',		--Enter the group contracts used in the report in a comma separated list. Example: 'Medicaid Product A', 'Product B Specialty'
 'N/A'		--Enter the input fields of the report, this includes what values are entered in the report. Ex. 'Procedure Code, Date Range', 'Date Range'	
 )

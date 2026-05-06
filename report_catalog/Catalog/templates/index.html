@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="jumbotron">
+    <h1 style="text-align: center;">Report Catalog</h1>
+    <p class="lead">This catalog brings together reports from multiple platforms so you can search and explore them in one place. Use the categories below.</p>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <a class="btn btn-primary btn-lg btn-block mb-3" href="/ssrs_program_dashboards">SSRS program dashboards</a>
+    </div>
+    <div class="col-md-3">
+        <a class="btn btn-primary btn-lg btn-block mb-3" href="/web_dashboards">Web dashboards</a>
+    </div>
+    <div class="col-md-3">
+        <a class="btn btn-primary btn-lg btn-block mb-3" href="/ssrs_dashboard_page">SSRS Dashboards</a>
+    </div>
+    <div class="col-md-3">
+        <a class="btn btn-primary btn-lg btn-block mb-3" href="/ssrs_automated_reports">SSRS Automated Reports</a>
+    </div>
+</div>
+
+{% endblock %}

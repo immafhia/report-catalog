@@ -41,9 +41,9 @@
     {% endif %}
 
 
-    {% if uphp_dashboard_results %}
+    {% if web_dashboard_results %}
     <div class="container mt-4">
-        <h2>UPHP Dashboards</h2>
+        <h2>Web dashboards</h2>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -54,7 +54,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for result in uphp_dashboard_results %}
+                {% for result in web_dashboard_results %}
                 <tr>
                     <td>{{ result.column1 }}</td>
                     <td>
@@ -69,9 +69,9 @@
     </div>
     {% endif %}
 
-    {% if ssrs_widoc_dashboard_results %}
+    {% if ssrs_dashboard_results %}
     <div class="container mt-4">
-        <h2>SSRS WIDOC Dashboards</h2>
+        <h2>SSRS Dashboards</h2>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -82,7 +82,35 @@
                 </tr>
             </thead>
             <tbody>
-                {% for result in ssrs_widoc_dashboard_results %}
+                {% for result in ssrs_dashboard_results %}
+                <tr>
+                    <td>{{ result.column1 }}</td>
+                    <td>
+                        <a href="{{ result.column2 }}" class="btn btn-primary btn-sm">Download Template</a>
+                    </td>
+                    <td>{{ result.column3 }}</td>
+                    <!-- Add more columns as needed -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    {% if ssrs_program_dashboard_results %}
+    <div class="container mt-4">
+        <h2>SSRS program dashboards</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Report Name</th>
+                    <th>Template Link</th>
+                    <th>Description</th>
+                    <!-- Add more column headers as needed -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in ssrs_program_dashboard_results %}
                 <tr>
                     <td>{{ result.column1 }}</td>
                     <td>

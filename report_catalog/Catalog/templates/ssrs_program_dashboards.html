@@ -44,22 +44,22 @@
         <div class="row">
             <div class="col-sm-6">
                 {% if previous_page_number is not none %}
-                <a href="{{ url_for('uphp_dashboard_page', page=previous_page_number) }}" class="btn btn-primary">Previous Page</a>
+                <a href="{{ url_for('ssrs_program_dashboards_page', page=previous_page_number) }}" class="btn btn-primary">Previous Page</a>
                 {% endif %}
             </div>
             <div class="col-sm-6 text-right">
-                <a href="{{ url_for('uphp_dashboard_page', page=next_page_number) }}" class="btn btn-primary">Next Page</a>
+                <a href="{{ url_for('ssrs_program_dashboards_page', page=next_page_number) }}" class="btn btn-primary">Next Page</a>
             </div>
         </div>
         {% else %}
         <div class="row">
             <div class="col-sm-12 text-center">
                 {% if previous_page_number is not none %}
-                <a href="{{ url_for('uphp_dashboard_page', page=previous_page_number) }}" class="btn btn-primary">Previous Page</a>
+                <a href="{{ url_for('ssrs_program_dashboards_page', page=previous_page_number) }}" class="btn btn-primary">Previous Page</a>
                 {% endif %}
             </div>
         </div>
         {% endif %}
     </div>
-</div>
+
     {% endblock %}

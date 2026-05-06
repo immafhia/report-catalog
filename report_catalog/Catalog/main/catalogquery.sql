@@ -1,11 +1,16 @@
-/*This is the query that will update the catalog data table with updated data*/
+/* ETL script: loads merged report metadata into dbo.catalog_data (portfolio sample). */
 
 
 /*
-CHANGE LOG
+CONFIGURATION (replace with your environment)
 ============================================
-08/26/2024 Brad Maison TFS#6680: Removed data constraints column at request of PC
-09/27/2024 Brad Maison TFS#9264: Updated average runtime caclculation to work as BIGINT to remove any arithimitc overflow.
+- LINKED_DW: Linked server (or server name) that hosts the web-dashboard application database "Dashboard".
+- YOUR_SSRS_CATALOG: Database that holds SSRS ReportServer catalog tables (often named ReportServer).
+- Base URLs for report links: search for example.local and substitute your hosts.
+- FolderPath token SSRS_Program_Dashboard maps to catalog [Report Type] 'SSRS Program Dashboards' (adjust if your SSRS folder naming differs).
+CHANGELOG
+============================================
+- Schema adjustments and BIGINT-safe average runtime aggregation for large execution logs.
 ============================================
 */
 TRUNCATE TABLE [ReportCatalog].[dbo].[catalog_data]
@@ -31,7 +36,7 @@ SELECT
 	p.id,
 	CONVERT(varchar, DATEADD(ms,AVG(DATEDIFF(s, accesstime, completiontime))* 1000, 0), 114) average
 INTO #avg_time
-FROM REPORT.Dashboard.dbo.progress p
+FROM [LINKED_DW].[Dashboard].[dbo].[progress] p
 WHERE p.progress = 100
 	AND p.completiontime IS NOT NULL
 	AND p.accesstime > DATEADD(YEAR, -3, p.accesstime)
@@ -43,7 +48,7 @@ SELECT
 	p.id,
 	MIN(p.accesstime) creation_date
 INTO #report_creation_date
-FROM REPORT.Dashboard.dbo.progress p
+FROM [LINKED_DW].[Dashboard].[dbo].[progress] p
 GROUP BY p.id
 
 INSERT INTO #results
@@ -59,17 +64,17 @@ INSERT INTO #results
 	[Group Contracts]
 )
 SELECT 
-	'UPHP Dashboard' AS FolderPath,
+	'Web Dashboard' AS FolderPath,
 	r.report,
 	r.description,
 	rcd.creation_date,
 	NULL,
 	avg_tm.average [Average (h:m:s:ms)],
-	'https://dashboard.uphp.local/dashboard/' + r.location,
-	'https://dashboard.uphp.local/dashboard/' + REPLACE(REPLACE(location, '.aspx', '.xlsx'), '/', '/templates/'),
+	'https://dashboard.example.local/dashboard/' + r.location,
+	'https://dashboard.example.local/dashboard/' + REPLACE(REPLACE(location, '.aspx', '.xlsx'), '/', '/templates/'),
 	NULL
 
-FROM REPORT.Dashboard.dbo.reports r
+FROM [LINKED_DW].[Dashboard].[dbo].[reports] r
 
 LEFT JOIN #avg_time avg_tm
 	ON avg_tm.id = r.report_id
@@ -89,8 +94,8 @@ SELECT
 	c.Name,
     CONVERT(VARCHAR, DATEADD(ms, AVG(CAST(DATEDIFF(MILLISECOND, l.TimeStart, l.TimeEnd) AS BIGINT)), 0), 114) AS avg_time
 INTO #report_run_time
-FROM [SSRSReportServer].[dbo].[ExecutionLog] AS l
-INNER JOIN [SSRSReportServer].[dbo].[Catalog] AS c ON l.ReportID = C.ItemID
+FROM [YOUR_SSRS_CATALOG].[dbo].[ExecutionLog] AS l
+INNER JOIN [YOUR_SSRS_CATALOG].[dbo].[Catalog] AS c ON l.ReportID = C.ItemID
 WHERE c.Type = 2 
 GROUP BY c.Name
 
@@ -113,9 +118,9 @@ SELECT
 	c.CreationDate,
 	c.ModifiedDate, -- This is needed since everytime all the reports get redeployed this value gets reset regardless of it the report had any actual changes.
 	rt.avg_time [Average Time (h:m:s:ms)],
-	'https://ssrs.uphp.local/reports/report' + c.Path,
+	'https://ssrs.example.local/reports/report' + c.Path,
 	NULL
-FROM [SSRSReportServer].[dbo].[Catalog] c
+FROM [YOUR_SSRS_CATALOG].[dbo].[Catalog] c
 
 LEFT JOIN #report_run_time rt
 	ON rt.Name = c.Name 
@@ -130,7 +135,7 @@ SELECT
 	CASE 
 		WHEN r.[Report Type] = 'Automated_Reports' THEN 'SSRS Automated Reports'
 		WHEN r.[Report Type] = 'Dashboard' THEN 'SSRS Dashboard'
-		WHEN r.[Report Type] = 'SSRS_WIDOC_Dashboard' THEN 'SSRS WIDOC Dashboard'
+		WHEN r.[Report Type] = 'SSRS_Program_Dashboard' THEN 'SSRS Program Dashboards'
 		ELSE r.[Report Type]
 	END [Report Type],
     CASE 

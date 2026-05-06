@@ -3,12 +3,23 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }} - UPHP</title>
+    <title>{{ title }} — Report Catalog</title>
     <link rel="stylesheet" type="text/css" href="/static/content/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="/static/content/site.css" />
     <script src="/static/scripts/modernizr-2.6.2.js"></script>
-</head>
+    <style>
+        .navbar-nav-center {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
 
+            .navbar-nav-center .nav-item {
+                padding: 0 10px;
+            }
+    </style>
+</head>
+<!--Links associated with the buttons on the home page-->
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
@@ -18,25 +29,26 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a href="/" class="navbar-brand">Home</a>
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a href="{{ url_for('ssrs_automated_reports_page') }}">SSRS Automated Reports</a></li>
-                    <li><a href="{{ url_for('uphp_dashboard_page') }}">UPHP Dashboards</a></li>
-                    <li><a href="{{ url_for('ssrs_dashboard_page') }}">SSRS Dashboards</a></li>
-                    <li><a href="{{ url_for('ssrs_widoc_page') }}">SSRS WIDOC Dashboards</a></li>
-                    <li><a href="{{ url_for('search') }}">Search Reports</a></li>
-                </ul>
+                <div class="navbar-nav-center">
+                    <a href="/" class="navbar-brand">Home</a>
+                    <ul class="nav navbar-nav">
+                        <li class="nav-item"><a href="{{ url_for('ssrs_automated_reports_page') }}">SSRS Automated Reports</a></li>
+                        <li class="nav-item"><a href="{{ url_for('web_dashboard_catalog') }}">Web dashboards</a></li>
+                        <li class="nav-item"><a href="{{ url_for('ssrs_program_dashboards_page') }}">SSRS program dashboards</a></li>
+                        <li class="nav-item"><a href="{{ url_for('search') }}">Search Reports</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
-
+<!--                                               -->
     <div class="container body-content">
         {% block content %}{% endblock %}
         <hr />
         <footer style="text-align: center;">
-            <p>&copy; {{ year }} - UPHP</p>
+            <p>&copy; {{ year }} — Report Catalog</p>
         </footer>
     </div>
 
@@ -44,6 +56,5 @@
     <script src="/static/scripts/bootstrap.js"></script>
     <script src="/static/scripts/respond.js"></script>
     {% block scripts %}{% endblock %}
-
 </body>
 </html>

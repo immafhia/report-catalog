@@ -32,14 +32,14 @@
     </div>
     {% endif %}
 
-    {% if uphp_dashboard_results %}
+    {% if web_dashboard_results %}
     <div class="card mb-4">
         <div class="card-header">
-            <h3 class="mb-0" style="font-size: 24px;">UPHP Dashboards</h3>
+            <h3 class="mb-0" style="font-size: 24px;">Web dashboards</h3>
         </div>
         <div class="card-body">
             <ul class="list-unstyled">
-                {% for result in uphp_dashboard_results %}
+                {% for result in web_dashboard_results %}
                 <li class="mb-3">
                     <strong>Report Type:</strong> {{ result.column1 }} <br>
                     <strong>Template Link:</strong> {{ result.column2 }} <br>
@@ -72,14 +72,14 @@
     </div>
     {% endif %}
 
-    {% if ssrs_widoc_dashboard_results %}
+    {% if ssrs_program_dashboard_results %}
     <div class="card mb-4">
         <div class="card-header">
-            <h3 class="mb-0" style="font-size: 24px;" style="font-size: 24px;">SSRS WIDOC Dashboards</h3>
+            <h3 class="mb-0" style="font-size: 24px;" style="font-size: 24px;">SSRS program dashboards</h3>
         </div>
         <div class="card-body">
             <ul class="list-unstyled">
-                {% for result in ssrs_widoc_dashboard_results %}
+                {% for result in ssrs_program_dashboard_results %}
                 <li class="mb-3">
                     <strong>Report Type:</strong> {{ result.column1 }} <br>
                     <strong>Template Link:</strong> {{ result.column2 }} <br>

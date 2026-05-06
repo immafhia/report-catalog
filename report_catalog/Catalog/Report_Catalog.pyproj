@@ -17,7 +17,7 @@
     <OutputPath>.</OutputPath>
     <SuppressCollectPythonCloudServiceFiles>true</SuppressCollectPythonCloudServiceFiles>
     <Name>Report_Catalog</Name>
-    <RootNamespace>UPHP_Catalog</RootNamespace>
+    <RootNamespace>ReportCatalogPortfolio</RootNamespace>
     <SuppressEnvironmentCreationPrompt>True</SuppressEnvironmentCreationPrompt>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -66,7 +66,6 @@
     <Content Include="main\pseudocode_files\dashboard_pseudocode\Plexis Auths and Referrals Pseudocode.docx" />
     <Content Include="main\pseudocode_files\dashboard_pseudocode\Revenue reconciliation on payment file not in pcm pseudocode.docx" />
     <Content Include="main\pseudocode_files\dashboard_pseudocode\Tobacco_Usuage_Dashboard_Pseudocode.docx" />
-    <Content Include="main\pseudocode_files\dashboard_pseudocode\UPHP ICO Weekly COVID Data Spreadsheet Pseudocode.docx" />
     <Content Include="main\static\content\bootstrap.css" />
     <Content Include="main\static\content\bootstrap.min.css" />
     <Content Include="main\static\content\site.css" />
@@ -93,8 +92,8 @@
     <Content Include="main\templates\layout.html" />
     <Content Include="main\templates\search.html" />
     <Content Include="main\templates\ssrs_automated_reports.html" />
-    <Content Include="main\templates\ssrs_widoc_dashboards.html" />
-    <Content Include="main\templates\uphp_dashboard_page.html" />
+    <Content Include="main\templates\ssrs_program_dashboards.html" />
+    <Content Include="main\templates\web_dashboard_page.html" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />

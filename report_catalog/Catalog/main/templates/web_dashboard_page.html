@@ -8,7 +8,7 @@
 {% block content %}
 <!--Main table of page that contains the catalog data-->
 <div class="container mt-4">
-    <h2>SSRS WIDOC Dashboards</h2>
+    <h2>Web dashboards</h2>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -47,24 +47,24 @@
             {% endfor %}
         </tbody>
     </table>
-    <!-- End of Table Content -->
+<!-- End of Table Content -->
 
     <!-- Previous and Next Page controls -->
     <div class="row">
         <div class="col-sm-6">
             {% if previous_page_number is not none %}
-            <a href="{{ url_for('ssrs_widoc_page', page=previous_page_number) }}" class="btn btn-primary">Previous Page</a>
+            <a href="{{ url_for('web_dashboard_catalog', page=previous_page_number) }}" class="btn btn-primary">Previous Page</a>
             {% endif %}
         </div>
         <div class="col-sm-6 text-right">
             {% if next_page_number is not none %}
-            <a href="{{ url_for('ssrs_widoc_page', page=next_page_number) }}" class="btn btn-primary">Next Page</a>
+            <a href="{{ url_for('web_dashboard_catalog', page=next_page_number) }}" class="btn btn-primary">Next Page</a>
             {% endif %}
         </div>
     </div>
 </div>
 
-<!--Javascript to format the Modified and Created Date to just a date without a timestamp-->
+    <!--Javascript to format the Modified and Created Date to just a date without a timestamp-->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll('.date-column').forEach(function (element) {
